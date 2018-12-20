@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+   - name: Check the pre requsities
+     yum:
+      name: "{{ packages }}"
+     vars:
+       packages:
+       - java-1.8.0-openjdk
+       - wget
+   - name: Check the tomcat directory
+
+     file:
+      path: /opt/tomcat
+      state: directory
+     
+   - name: Download the tomcat tar file
+     get_url: 
+      url: http://mirror.23media.de/apache/tomcat/tomcat-8/v8.5.29/bin/apache-tomcat-8.5.29.tar.gz
+      dest: /opt/tomcat
+
+   - name: extract the file
+     unarchive:
+      src: /opt/tomcat/apache-tomcat-8.5.29.tar.gz
+      dest: /opt/tomcat/ 
+      remote_src: yes
+
+   - name: change permissions
+     file:
+      path: /opt/tomcat/apache-tomcat-8.5.29/bin/startup.sh
+      mode: 0744
+
+   - name: change permissions
+     file:
+      path: /opt/tomcat/apache-tomcat-8.5.29/bin/shutdown.sh
+      mode: 0744
+
+   - name: change permissions
+     file:
+      path: /opt/tomcat/apache-tomcat-8.5.29/bin/catalina.sh
+      mode: 0744
+
+
+   - name: Download the sample application and wait for 60 secs
+     get_url:
+      url: https://tomcat.apache.org/tomcat-8.0-doc/appdev/sample/sample.war
+      dest: /opt/tomcat/apache-tomcat-8.5.29/webapps
+
+   - name: Download the sample application and wait for 60 secs      
+     shell: sleep 60
+
+   - name: start the tomcat services
+     shell: /opt/tomcat/apache-tomcat-8.5.29/bin/catalina.sh start
+

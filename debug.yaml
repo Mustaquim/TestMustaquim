@@ -1,0 +1,10 @@
+---
+- name: Debug playbook
+  hosts: all
+  tasks:
+   - debug:
+      msg: "First task to print debug message"
+
+   - debug:
+      msg: "System {{ inventory.hostname }} has uuid {{ ansible.product.uuid }}"
+
