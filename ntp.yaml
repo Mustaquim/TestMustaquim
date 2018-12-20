@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+   - name: Installing NTP Package.
+     yum:
+      name: ntp
+      state: present
+   - name: Starting the service
+     service:
+      name: ntpd
+      state: started
+   - name: copy ntp conf file to other host
+     copy:
+      src: /etc/ntp.conf
+      dest: /etc/ntp.conf
+
+
